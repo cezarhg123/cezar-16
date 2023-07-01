@@ -29,6 +29,7 @@ fn main() {
                     let label = line.get(1..).unwrap();
 
                     labels.insert(label.to_string(), program_line_count);
+                    continue;
                 }
 
                 let instruction = line.get(0..4).unwrap();

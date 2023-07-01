@@ -166,6 +166,7 @@ impl CPU {
                 _ => {}
             }
             counter += 1;
+            // just to see if emulator is working properly
             println!("{}", self.reg_c);
         }
     }

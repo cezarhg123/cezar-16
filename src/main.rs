@@ -3,13 +3,6 @@ pub mod cpu;
 use cpu::CPU;
 
 fn main() {
-    // let mut program = [0; 8000];
-    // program[0] = 15;
-    // program[1] = 55296;
-    // program[2] = 4;
-    // program[3] = 55808;
-    // program[4] = 24576;
-
     let program_binary = std::fs::read("output.bin").unwrap();
     let mut program = [0; 8000];
     for i in 0..program_binary.len() / 2 {

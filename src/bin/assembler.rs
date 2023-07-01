@@ -1,4 +1,4 @@
-use std::{io::{Read, Write}, fs::File};
+use std::{io::{Read, Write}, fs::File, collections::HashMap};
 
 
 
@@ -11,15 +11,24 @@ fn main() {
     match std::fs::File::open(filename) {
         Ok(mut file) => {
             let mut output_file = File::create("output.bin").unwrap();
+            let mut labels: HashMap<String, u16> = HashMap::new();
 
             let mut source = String::new();
             file.read_to_string(&mut source).unwrap();
             
             let lines: Vec<&str> = source.lines().collect();
+            let mut program_line_count = 0;
 
             for line in lines {
-                if line.chars().next().unwrap() == '#' {
+                let first_char = line.chars().next().unwrap_or('#');
+                if first_char == '#' || first_char == '\n' {
                     continue;
+                }
+
+                if first_char == '.' {
+                    let label = line.get(1..).unwrap();
+
+                    labels.insert(label.to_string(), program_line_count);
                 }
 
                 let instruction = line.get(0..4).unwrap();
@@ -97,11 +106,13 @@ fn main() {
 
                         output_file.write(binary_instruction.to_be_bytes().as_slice()).unwrap();
                     }
+                    // is name addn because it needs to be 4 characters long
                     "addn" => {
                         let binary_instruction: u16 = 24576;
 
                         output_file.write(binary_instruction.to_be_bytes().as_slice()).unwrap();
                     }
+                    // is name subn because it needs to be 4 characters long
                     "subn" => {
                         let binary_instruction: u16 = 24577;
 
@@ -112,18 +123,31 @@ fn main() {
 
                         output_file.write(binary_instruction.to_be_bytes().as_slice()).unwrap();
                     }
+                    // jump if true or 1 is in register C
                     "jmpt" => {
-                        let binary_instruction: u16 = 32768;
+                        let (_, arg) = line.split_once(" ").unwrap();
+
+                        let mut binary_instruction: u16 = 32768;
+                        // address in ram
+                        let value: u16 = labels.get(arg).unwrap().clone();
+                        binary_instruction = binary_instruction | value;
 
                         output_file.write(binary_instruction.to_be_bytes().as_slice()).unwrap();
                     }
+                    // jump if false or 0 is in register C
                     "jmpf" => {
-                        let binary_instruction: u16 = 40960;
+                        let (_, arg) = line.split_once(" ").unwrap();
+
+                        let mut binary_instruction: u16 = 40960;
+                        // address in ram
+                        let value: u16 = labels.get(arg).unwrap().clone();
+                        binary_instruction = binary_instruction | value;
 
                         output_file.write(binary_instruction.to_be_bytes().as_slice()).unwrap();
                     }
                     _ => {}
                 }
+                program_line_count += 1;
             } 
         }
         Err(e) => {

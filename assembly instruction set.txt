@@ -1,0 +1,11 @@
+move <reg>:<reg> copies value from register to register
+lval <value> - loads value into register D
+save <address> - save from register C to ram address
+load <address> - load from ram address to register D
+addn - adds values from A & B and outputs to C
+subn - subtracts values from A & B and outputs to C
+equl - if A & B have equal values then C will be set to 1, if not, it will be set to 0
+jmpt <label> - jump to label if C is 1(true)
+jmpf <label> - jump to label if C is 0(false)
+#comment
+.label

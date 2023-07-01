@@ -6,8 +6,6 @@ fn main() {
     let mut args = std::env::args();
     let filename = args.nth(1).unwrap();
 
-    let mut program = [0; 8000];
-
     match std::fs::File::open(filename) {
         Ok(mut file) => {
             let mut output_file = File::create("output.bin").unwrap();

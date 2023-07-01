@@ -39,19 +39,19 @@ fn main() {
 
                         let (arg1, arg2) = args.split_once(":").unwrap();
 
-                        let mut binary_instruction: u16 = 49152;
+                        let mut binary_instruction: u16 = 0b110_0000_0000_0000_0;
                         match arg1 {
                             "a" => {
                                 binary_instruction = binary_instruction | 0;
                             }
                             "b" => {
-                                binary_instruction = binary_instruction | 2048;
+                                binary_instruction = binary_instruction | 0b000_01_00_0000_0000_0;
                             }
                             "c" => {
-                                binary_instruction = binary_instruction | 4096;
+                                binary_instruction = binary_instruction | 0b000_10_00_0000_0000_0;
                             }
                             "d" => {
-                                binary_instruction = binary_instruction | 6144;
+                                binary_instruction = binary_instruction | 0b000_11_00_0000_0000_0;
                             }
                             _ => {}
                         }
@@ -60,13 +60,13 @@ fn main() {
                                 binary_instruction = binary_instruction | 0;
                             }
                             "b" => {
-                                binary_instruction = binary_instruction | 512;
+                                binary_instruction = binary_instruction | 0b000_00_01_0000_0000_0;
                             }
                             "c" => {
-                                binary_instruction = binary_instruction | 1024;
+                                binary_instruction = binary_instruction | 0b000_00_10_0000_0000_0;
                             }
                             "d" => {
-                                binary_instruction = binary_instruction | 1536;
+                                binary_instruction = binary_instruction | 0b000_00_11_0000_0000_0;
                             }
                             _ => {}
                         }
@@ -87,7 +87,7 @@ fn main() {
                     "save" => {
                         let (_, arg) = line.split_once(" ").unwrap();
 
-                        let mut binary_instruction: u16 = 8192;
+                        let mut binary_instruction: u16 = 0b001_0000_0000_0000_0;
                         // address in ram
                         let value: u16 = arg.trim().parse().unwrap();
                         binary_instruction = binary_instruction | value;
@@ -98,7 +98,7 @@ fn main() {
                     "load" => {
                         let (_, arg) = line.split_once(" ").unwrap();
 
-                        let mut binary_instruction: u16 = 16384;
+                        let mut binary_instruction: u16 = 0b010_0000_0000_0000_0;
                         // address in ram
                         let value: u16 = arg.trim().parse().unwrap();
                         binary_instruction = binary_instruction | value;
@@ -107,18 +107,18 @@ fn main() {
                     }
                     // is name addn because it needs to be 4 characters long
                     "addn" => {
-                        let binary_instruction: u16 = 24576;
+                        let binary_instruction: u16 = 0b011_0000_0000_00_000;
 
                         output_file.write(binary_instruction.to_be_bytes().as_slice()).unwrap();
                     }
                     // is name subn because it needs to be 4 characters long
                     "subn" => {
-                        let binary_instruction: u16 = 24577;
+                        let binary_instruction: u16 = 0b011_0000_0000_00_001;
 
                         output_file.write(binary_instruction.to_be_bytes().as_slice()).unwrap();
                     }
                     "equl" => {
-                        let binary_instruction: u16 = 24578;
+                        let binary_instruction: u16 = 0b011_0000_0000_00_010;
 
                         output_file.write(binary_instruction.to_be_bytes().as_slice()).unwrap();
                     }
@@ -126,7 +126,7 @@ fn main() {
                     "jmpt" => {
                         let (_, arg) = line.split_once(" ").unwrap();
 
-                        let mut binary_instruction: u16 = 32768;
+                        let mut binary_instruction: u16 = 0b100_0000_0000_0000_0;
                         // address in ram
                         let value: u16 = labels.get(arg).unwrap().clone();
                         binary_instruction = binary_instruction | value;
@@ -137,7 +137,7 @@ fn main() {
                     "jmpf" => {
                         let (_, arg) = line.split_once(" ").unwrap();
 
-                        let mut binary_instruction: u16 = 40960;
+                        let mut binary_instruction: u16 = 0b101_0000_0000_0000_0;
                         // address in ram
                         let value: u16 = labels.get(arg).unwrap().clone();
                         binary_instruction = binary_instruction | value;

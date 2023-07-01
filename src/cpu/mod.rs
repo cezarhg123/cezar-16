@@ -64,31 +64,31 @@ impl CPU {
             let data = self.program[counter as usize];
 
             // hopefully this gets the first 3 bits
-            let instruction = data & 57344;
+            let instruction = data & 0b111_0000_0000_0000_0;
 
             match instruction {
                 // 000
                 0 => {
                     // this should get the data after the first 3 bits
-                    let value = data & 8191;
+                    let value = data & 0b000_1111_1111_1111_1;
 
                     self.reg_d = value;
                 }
                 // 001
-                8192 => {
-                    let address = data & 8191;
+                0b001_0000_0000_0000_0 => {
+                    let address = data & 0b000_1111_1111_1111_1;
 
                     self.ram[address as usize] = self.reg_c;
                 }
                 // 010
-                16384 => {
-                    let address = data & 8191;
+                0b010_0000_0000_0000_0 => {
+                    let address = data & 0b000_1111_1111_1111_1;
 
                     self.reg_d = self.ram[address as usize];
                 }
                 // 011
-                24576 => {
-                    let opcode = data & 7;
+                0b011_0000_0000_0000_0 => {
+                    let opcode = data & 0b0000_0000_0000_0111;
 
                     match opcode {
                         // add
@@ -111,37 +111,37 @@ impl CPU {
                     }
                 }
                 // 100
-                32768 => {
+                0b100_0000_0000_0000_0 => {
                     if self.reg_c == 1 {   
-                        let address = data & 8191;
+                        let address = data & 0b000_1111_1111_1111_1;
                         counter = address as usize;
                         continue;
                     }
                 }
                 // 101
-                40960 => {
+                0b101_0000_0000_0000_0 => {
                     if self.reg_c == 0 {
-                        let address = data & 8191;
+                        let address = data & 0b000_1111_1111_1111_1;
                         counter = address as usize;
                         continue;
                     }
                 }
                 // 110
-                49152 => {
-                    let input_register = data & 6144;
-                    let output_register = data & 1536;
+                0b110_0000_0000_0000_0 => {
+                    let input_register = data & 0b000_11_00_0000_0000_0;
+                    let output_register = data & 0b000_00_11_0000_0000_0;
 
                     let input_register_value = match input_register {
                         0 => {
                             self.reg_a
                         }
-                        2048 => {
+                        0b000_01_00_0000_0000_0 => {
                             self.reg_b
                         }
-                        4096 => {
+                        0b000_10_00_0000_0000_0 => {
                             self.reg_c
                         }
-                        6144 => {
+                        0b000_11_00_0000_0000_0 => {
                             self.reg_d
                         }
                         _ => panic!("input register number is not valid")
@@ -151,13 +151,13 @@ impl CPU {
                         0 => {
                             self.reg_a = input_register_value;
                         }
-                        512 => {
+                        0b000_00_01_0000_0000_0 => {
                             self.reg_b = input_register_value;
                         }
-                        1024 => {
+                        0b000_00_10_0000_0000_0 => {
                             self.reg_c = input_register_value;
                         }
-                        1536 => {
+                        0b000_00_11_0000_0000_0 => {
                             self.reg_d = input_register_value;
                         }
                         _ => panic!("output register number is not valid")

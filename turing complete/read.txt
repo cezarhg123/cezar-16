@@ -1,0 +1,2 @@
+to copy paste into TC, run bin-to-num. it simply just translates the binary into u16 numbers inside a output.txt file
+make sure output.bin is in the same folder as bin-to-num.exe
